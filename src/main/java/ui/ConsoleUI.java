@@ -3,13 +3,9 @@ package ui;
 import entities.Course;
 import entities.Enrollment;
 import entities.Student;
-import exceptions.*;
 import repositories.CourseRepository;
 import repositories.EnrollmentRepository;
 import repositories.StudentRepository;
-import repositories.impl.inmemory.InMemoryCourseRepository;
-import repositories.impl.inmemory.InMemoryEnrollmentRepository;
-import repositories.impl.inmemory.InMemoryStudentRepository;
 import services.CourseService;
 import services.RegistrationService;
 
@@ -19,17 +15,23 @@ import java.util.Scanner;
 public class ConsoleUI {
     private final Scanner scanner = new Scanner(System.in);
 
-    // In-memory repositories
-    private final StudentRepository studentRepo = new InMemoryStudentRepository();
-    private final CourseRepository courseRepo = new InMemoryCourseRepository();
-    private final EnrollmentRepository enrollmentRepo = new InMemoryEnrollmentRepository();
+    private final StudentRepository studentRepo;
+    private final CourseRepository courseRepo;
+    private final EnrollmentRepository enrollmentRepo;
 
-    // Services
-    private final RegistrationService registrationService =
-            new RegistrationService(studentRepo, courseRepo, enrollmentRepo);
+    private final RegistrationService registrationService;
+    private final CourseService courseService;
 
-    private final CourseService courseService =
-            new CourseService(courseRepo, enrollmentRepo);
+    public ConsoleUI(StudentRepository studentRepo,
+                     CourseRepository courseRepo,
+                     EnrollmentRepository enrollmentRepo) {
+        this.studentRepo = studentRepo;
+        this.courseRepo = courseRepo;
+        this.enrollmentRepo = enrollmentRepo;
+
+        this.registrationService = new RegistrationService(studentRepo, courseRepo, enrollmentRepo);
+        this.courseService = new CourseService(courseRepo, enrollmentRepo);
+    }
 
     public void start() {
         seedData();
@@ -67,9 +69,9 @@ public class ConsoleUI {
         studentRepo.create(new Student("Ali"));
         studentRepo.create(new Student("Sara"));
 
-        courseRepo.create(new Course("OOP", 2, "MON", 600, 720));      // 10:00-12:00
-        courseRepo.create(new Course("Database", 2, "MON", 700, 800)); // conflict
-        courseRepo.create(new Course("Math", 3, "TUE", 600, 660));     // no conflict
+        courseRepo.create(new Course("OOP", 2, "MON", 600, 720));
+        courseRepo.create(new Course("Database", 2, "MON", 700, 800));
+        courseRepo.create(new Course("Math", 3, "TUE", 600, 660));
     }
 
     private void printMenu() {
@@ -150,7 +152,6 @@ public class ConsoleUI {
         System.out.println("SUCCESS: Course deleted.");
     }
 
-    // ---------- helper input methods ----------
     private int readInt(String prompt) {
         while (true) {
             try {
@@ -167,4 +168,3 @@ public class ConsoleUI {
         return scanner.nextLine().trim();
     }
 }
-

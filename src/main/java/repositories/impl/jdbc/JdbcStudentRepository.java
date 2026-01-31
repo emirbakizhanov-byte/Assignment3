@@ -1,5 +1,6 @@
 package repositories.impl.jdbc;
 
+
 import entities.Student;
 import repositories.StudentRepository;
 
@@ -18,7 +19,6 @@ public class JdbcStudentRepository implements StudentRepository {
 
     @Override
     public Student create(Student student) {
-
         String sql = """
                 INSERT INTO students (name)
                 VALUES (?)
@@ -26,7 +26,6 @@ public class JdbcStudentRepository implements StudentRepository {
                 """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
             stmt.setString(1, student.getName());
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -37,7 +36,6 @@ public class JdbcStudentRepository implements StudentRepository {
             }
 
             throw new SQLException("Student insert failed");
-
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create student", e);
         }
@@ -45,7 +43,6 @@ public class JdbcStudentRepository implements StudentRepository {
 
     @Override
     public Optional<Student> findById(int id) {
-
         String sql = """
                 SELECT id, name
                 FROM students
@@ -53,7 +50,6 @@ public class JdbcStudentRepository implements StudentRepository {
                 """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
             stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -63,7 +59,6 @@ public class JdbcStudentRepository implements StudentRepository {
             }
 
             return Optional.empty();
-
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find student id=" + id, e);
         }
@@ -71,7 +66,6 @@ public class JdbcStudentRepository implements StudentRepository {
 
     @Override
     public List<Student> findAll() {
-
         String sql = """
                 SELECT id, name
                 FROM students
@@ -88,9 +82,30 @@ public class JdbcStudentRepository implements StudentRepository {
             }
 
             return list;
-
         } catch (SQLException e) {
             throw new RuntimeException("Failed to list students", e);
+        }
+    }
+
+    public void deleteById(int id) {
+        // safe version: delete enrollments first (FK)
+        try {
+            try (PreparedStatement s1 = connection.prepareStatement(
+                    "DELETE FROM enrollments WHERE student_id = ?"
+            )) {
+                s1.setInt(1, id);
+                s1.executeUpdate();
+            }
+
+            try (PreparedStatement s2 = connection.prepareStatement(
+                    "DELETE FROM students WHERE id = ?"
+            )) {
+                s2.setInt(1, id);
+                s2.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete student id=" + id, e);
         }
     }
 

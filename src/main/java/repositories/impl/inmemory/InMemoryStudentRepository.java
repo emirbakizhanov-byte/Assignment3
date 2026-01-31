@@ -8,14 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class InMemoryStudentRepository implements StudentRepository {
+
     private final List<Student> students = new ArrayList<>();
     private int nextId = 1;
 
     @Override
     public Student create(Student student) {
-        Student created = new Student(nextId++, student.getName());
-        students.add(created);
-        return created;
+        student.setId(nextId++);
+        students.add(student);
+        return student;
     }
 
     @Override
@@ -26,6 +27,11 @@ public class InMemoryStudentRepository implements StudentRepository {
     @Override
     public List<Student> findAll() {
         return new ArrayList<>(students);
+    }
+
+
+    public void deleteById(int id) {
+        students.removeIf(s -> s.getId() == id);
     }
 }
 

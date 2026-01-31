@@ -1,4 +1,4 @@
-import db.DatabaseConnection;
+import db.DatabaseConnectionManager;
 import repositories.CourseRepository;
 import repositories.EnrollmentRepository;
 import repositories.StudentRepository;
@@ -11,8 +11,8 @@ import java.sql.Connection;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            Connection conn = DatabaseConnection.getConnection();
+
+        try (Connection conn = DatabaseConnectionManager.getConnection()) {
 
             StudentRepository studentRepo = new JdbcStudentRepository(conn);
             CourseRepository courseRepo = new JdbcCourseRepository(conn);

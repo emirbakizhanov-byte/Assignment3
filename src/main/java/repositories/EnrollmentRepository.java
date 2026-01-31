@@ -1,16 +1,15 @@
 package repositories;
 
 import entities.Enrollment;
-import entities.Student;
+import repositories.base.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface EnrollmentRepository {
-    Enrollment create(Enrollment enrollment);
+public interface EnrollmentRepository extends Repository<Enrollment, Integer> {
+
     Optional<Enrollment> findByStudentAndCourse(int studentId, int courseId);
 
-    List<Enrollment> findAll();
     List<Enrollment> findByStudentId(int studentId);
     List<Enrollment> findByCourseId(int courseId);
 

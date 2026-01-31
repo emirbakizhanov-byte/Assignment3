@@ -1,12 +1,18 @@
 package repositories;
 
 import entities.Student;
-import java.util.List;
+import repositories.base.Repository;
+
 import java.util.Optional;
 
-public interface StudentRepository {
-    Student create(Student student);
-    Optional<Student> findById(int id);
-    List<Student> findAll();
-}
+public interface StudentRepository extends Repository<Student, Integer> {
 
+    // your existing method
+    Optional<Student> findById(int id);
+
+    // bridge for generic Repository<Integer>
+    @Override
+    default Optional<Student> findById(Integer id) {
+        return findById(id.intValue());
+    }
+}

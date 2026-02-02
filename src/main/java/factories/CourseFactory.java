@@ -1,6 +1,10 @@
 package factories;
+import entities.Course;
+import entities.CourseType;
+import entities.LectureCourse;
+import entities.LabCourse;
+import entities.OnlineCourse;
 
-import entities.*;
 
 public class CourseFactory {
 

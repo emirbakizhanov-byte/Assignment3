@@ -3,6 +3,7 @@ Campus Course Registration System** is our Java project for the Object-Oriented 
 The project is organized into different packages such as **ui** for the console menu, **entities (models)** for entity classes, **repositories** for generic repository interfaces and their JDBC implementations, **services** for business logic, **factories** and **builders** for design pattern implementations, and **db** for database connection management.
 
 In **Milestone 2**, the project was extended with more advanced OOP concepts and design patterns. A **Generic Repository** structure was implemented to make data access more flexible and reusable. The **Factory pattern** is used to create different types of courses (Lecture, Lab, Online), while the **Builder pattern** is applied to construct student schedules in a clear and maintainable way. A **Singleton pattern** manages the database connection to ensure only one active connection is used. Additionally, **Lambda expressions** are used for sorting and processing collections, improving code readability and applying modern Java practices.
+Additional improvements include preventing duplicate enrollments, handling course capacity limits, validating user input in the console UI, and improving the formatting of student schedules and enrollment outputs have been added at the end.
 
 To run the project, open it in IntelliJ IDEA, configure the database connection settings in `DatabaseConnection.java`, and start the program from `Main.java`.
 
